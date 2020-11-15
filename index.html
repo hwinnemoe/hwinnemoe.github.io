@@ -123,10 +123,16 @@ function showGroupAndVideoByID(id) {
   videoObj = document.getElementById('videoDummy');
   videoObj.style.display = "";
   
+  // remove old event listener for pause event
+  if(currentVideo != null) {
+    currentVideo.removeEventListener('pause', pauseEventFunction);
+  }
+  
   // load new muted and looped video
   currentVideo = document.createElement('video');
   currentVideo.id = 'videoDummy';
   currentVideo.muted = true;
+  currentVideo.loop = true;
   currentVideo.setAttribute('playsinline', 'true');
   currentVideo.setAttribute('webkit-playsinline', 'true');
   currentVideo.width = 400;
@@ -143,12 +149,8 @@ function showGroupAndVideoByID(id) {
     group = document.getElementById(id);
     group.setAttributeNS(null, 'visibility', 'visible');
     currentID = id;
-  });
-  
-  // replay after video has ended, looping does not work properly
-  // on every browser when opened locally
-  currentVideo.addEventListener('ended', function() {
-    currentVideo.play();
+    
+    currentVideo.addEventListener('pause', pauseEventFunction);
   });
 }
 
