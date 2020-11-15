@@ -1,0 +1,160 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<title>Akustische Atomuhr</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+.videoWrapper {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  display: flex;
+}
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+rect {
+  cursor: pointer;
+}
+.regularRect {
+  opacity: 0;
+  fill: white;
+}
+.pauseRect {
+  opacity: 1;
+  fill: white;
+}
+text {
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="videoWrapper">
+  <div id="videoDummy"></div>
+  <svg viewbox="0 0 400 300"
+       preserveAspectRatio="xMidYMid meet">
+    <style>
+      .heavy {font: bold 20px sans-serif;}
+    </style>
+    <g id="pausedVideo" visibility="hidden">
+      <rect class="pauseRect" x="0" y="0" width="400" height="300" onclick="showGroupAndVideoByID(idDuringPause)"/>
+      <text x="60" y="150" class="heavy">Zum Starten klicken/berühren!</text>
+    </g>
+    <g id="Atomuhr_uebersicht_neu_final3" visibility="hidden">
+      <rect class="regularRect" x="55" y="131" width="58" height="74" onclick="showGroupAndVideoByID('Atomstrahlofen_7')"/>
+      <rect class="regularRect" x="161" y="68" width="99" height="94" onclick="showGroupAndVideoByID('Resonator_I_4')"/>
+      <rect class="regularRect" x="191" y="189" width="96" height="20" onclick="showGroupAndVideoByID('Frequenzvervielfacher_7')"/>
+      <rect class="regularRect" x="217" y="212" width="112" height="48" onclick="showGroupAndVideoByID('Funktionsweise_Quarzuhr_2')"/>
+      
+      <rect class="regularRect" x="55" y="44" width="15" height="15" onclick="window.open('https://www.tuwien.at/')"/>
+      <rect class="regularRect" x="72" y="43" width="28" height="16" onclick="window.open('https://ati.tuwien.ac.at/')"/>
+      <rect class="regularRect" x="282" y="45" width="57" height="12" onclick="window.open('https://www.uni-mainz.de/')"/>
+    </g>
+    <g id="Atomstrahlofen_7" visibility="hidden">
+      <rect class="regularRect" x="316" y="212" width="32" height="48" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+    <g id="Frequenzvervielfacher_7" visibility="hidden">
+      <rect class="regularRect" x="50" y="37" width="304" height="228" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+    <g id="Funktionsweise_Quarzuhr_2" visibility="hidden">
+      <rect class="regularRect" x="283" y="130" width="33" height="42" onclick="showGroupAndVideoByID('Atomuhr_quarz_info_neu_final')"/>
+      <rect class="regularRect" x="316" y="212" width="32" height="48" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+    <g id="Atomuhr_quarz_info_neu_final" visibility="hidden">
+      <rect class="regularRect" x="0" y="0" width="313" height="297" onclick="showGroupAndVideoByID('Funktionsweise_Quarzuhr_2')"/>
+      <rect class="regularRect" x="316" y="212" width="32" height="48" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+    <g id="Resonator_I_4" visibility="hidden">
+      <rect class="regularRect" x="147" y="92" width="168" height="85" onclick="showGroupAndVideoByID('Resonator_II_5')"/>
+      <rect class="regularRect" x="316" y="212" width="32" height="48" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+    <g id="Resonator_II_5" visibility="hidden">
+      <rect class="regularRect" x="248" y="181" width="65" height="71" onclick="showGroupAndVideoByID('Resonator_III_6')"/>
+      <rect class="regularRect" x="316" y="212" width="32" height="48" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+    <g id="Resonator_III_6" visibility="hidden">
+      <rect class="regularRect" x="248" y="181" width="65" height="71" onclick="showGroupAndVideoByID('Resonator_II_5')"/>
+      <rect class="regularRect" x="316" y="212" width="32" height="48" onclick="showGroupAndVideoByID('Atomuhr_uebersicht_neu_final3')"/>
+    </g>
+  </svg>
+</div>
+
+<script>
+var currentID = 'Atomuhr_uebersicht_neu_final3';
+var idDuringPause;
+var currentVideo;
+
+// show screen if video is paused by user
+var pauseEventFunction = function() {
+  group = document.getElementById(currentID);
+  group.setAttributeNS(null, 'visibility', 'hidden');
+  videoObj = document.getElementById('videoDummy');
+  videoObj.style.display = "none";
+  
+  idDuringPause = currentID;
+  
+  group = document.getElementById('pausedVideo');
+  group.setAttributeNS(null, 'visibility', 'visible');
+  currentID = 'pausedVideo';
+}
+
+function showGroupAndVideoByID(id) {
+  // deactivate old trigger zones
+  group = document.getElementById(currentID);
+  group.setAttributeNS(null, 'visibility', 'hidden');
+  
+  // make sure to show videoObj
+  videoObj = document.getElementById('videoDummy');
+  videoObj.style.display = "";
+  
+  // load new muted and looped video
+  currentVideo = document.createElement('video');
+  currentVideo.id = 'videoDummy';
+  currentVideo.muted = true;
+  currentVideo.setAttribute('playsinline', 'true');
+  currentVideo.setAttribute('webkit-playsinline', 'true');
+  currentVideo.width = 400;
+  currentVideo.height = 300;
+  currentVideo.src = 'assets/' + id + '.mp4';
+  currentVideo.play();
+  
+  // wait for new video to load until current video is replaced
+  // and activate new trigger zones and add pause event listener
+  currentVideo.addEventListener('loadeddata', function() {
+    var videoDummy = document.getElementById('videoDummy');
+    videoDummy.replaceWith(currentVideo);
+    
+    group = document.getElementById(id);
+    group.setAttributeNS(null, 'visibility', 'visible');
+    currentID = id;
+  });
+  
+  // replay after video has ended, looping does not work properly
+  // on every browser when opened locally
+  currentVideo.addEventListener('ended', function() {
+    currentVideo.play();
+  });
+}
+
+pauseEventFunction();
+</script>
+
+</body>
+
+</html>
